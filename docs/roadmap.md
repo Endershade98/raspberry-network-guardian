@@ -126,8 +126,3 @@
 4. Test container end-to-end: sniffer running, packets captured, states logged.  
 5. Optional: docker-compose for running network_guardian + Redis + SQLite.  
 
----
-
-Se vuoi, posso anche fornirti **una tabella temporale / roadmap iterativa** dove assegni a ciascuna epic settimane di sviluppo e testing, pronta per gestione in Trello/Jira o GitHub Projects.  
-
-Vuoi che faccia questa roadmap?
