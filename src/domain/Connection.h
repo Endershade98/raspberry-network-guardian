@@ -1,3 +1,4 @@
+// src/domain/Connection.h
 #pragma once
 #include <cstdint>
 
