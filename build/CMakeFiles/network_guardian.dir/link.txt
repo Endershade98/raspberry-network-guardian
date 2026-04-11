@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/network_guardian.dir/link.d CMakeFiles/network_guardian.dir/src/main.cpp.o -o network_guardian
