@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/test_runner.dir/link.d"
+  "CMakeFiles/test_runner.dir/tests/test_main.cpp.o"
+  "CMakeFiles/test_runner.dir/tests/test_main.cpp.o.d"
   "CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o"
   "CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o.d"
   "CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o"

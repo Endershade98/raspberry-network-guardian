@@ -72,10 +72,24 @@ include CMakeFiles/test_runner.dir/flags.make
 CMakeFiles/test_runner.dir/codegen:
 .PHONY : CMakeFiles/test_runner.dir/codegen
 
+CMakeFiles/test_runner.dir/tests/test_main.cpp.o: CMakeFiles/test_runner.dir/flags.make
+CMakeFiles/test_runner.dir/tests/test_main.cpp.o: /home/endershade/Projects/raspberry-network-guardian/tests/test_main.cpp
+CMakeFiles/test_runner.dir/tests/test_main.cpp.o: CMakeFiles/test_runner.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_runner.dir/tests/test_main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_runner.dir/tests/test_main.cpp.o -MF CMakeFiles/test_runner.dir/tests/test_main.cpp.o.d -o CMakeFiles/test_runner.dir/tests/test_main.cpp.o -c /home/endershade/Projects/raspberry-network-guardian/tests/test_main.cpp
+
+CMakeFiles/test_runner.dir/tests/test_main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/test_runner.dir/tests/test_main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/endershade/Projects/raspberry-network-guardian/tests/test_main.cpp > CMakeFiles/test_runner.dir/tests/test_main.cpp.i
+
+CMakeFiles/test_runner.dir/tests/test_main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/test_runner.dir/tests/test_main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/endershade/Projects/raspberry-network-guardian/tests/test_main.cpp -o CMakeFiles/test_runner.dir/tests/test_main.cpp.s
+
 CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o: CMakeFiles/test_runner.dir/flags.make
 CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o: /home/endershade/Projects/raspberry-network-guardian/tests/unit/test_connection.cpp
 CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o: CMakeFiles/test_runner.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o -MF CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o.d -o CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o -c /home/endershade/Projects/raspberry-network-guardian/tests/unit/test_connection.cpp
 
 CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.i: cmake_force
@@ -89,7 +103,7 @@ CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.s: cmake_force
 CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o: CMakeFiles/test_runner.dir/flags.make
 CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o: /home/endershade/Projects/raspberry-network-guardian/tests/unit/test_packet.cpp
 CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o: CMakeFiles/test_runner.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o -MF CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o.d -o CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o -c /home/endershade/Projects/raspberry-network-guardian/tests/unit/test_packet.cpp
 
 CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.i: cmake_force
@@ -102,18 +116,20 @@ CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.s: cmake_force
 
 # Object files for target test_runner
 test_runner_OBJECTS = \
+"CMakeFiles/test_runner.dir/tests/test_main.cpp.o" \
 "CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o" \
 "CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o"
 
 # External object files for target test_runner
 test_runner_EXTERNAL_OBJECTS =
 
+test_runner: CMakeFiles/test_runner.dir/tests/test_main.cpp.o
 test_runner: CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.o
 test_runner: CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.o
 test_runner: CMakeFiles/test_runner.dir/build.make
 test_runner: CMakeFiles/test_runner.dir/compiler_depend.ts
 test_runner: CMakeFiles/test_runner.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable test_runner"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable test_runner"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_runner.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

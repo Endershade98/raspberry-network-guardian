@@ -1,4 +1,4 @@
-FROM arm64v8/debian:bullseye-slim
+FROM debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
 COPY . /app
 
 RUN mkdir build && cd build && cmake .. && make
