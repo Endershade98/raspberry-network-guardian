@@ -1,26 +1,23 @@
 // tests/unit/test_connection.cpp
-#include <cassert>
+
+#include <gtest/gtest.h>
 #include "../../src/domain/Connection.h"
-using namespace domain;
 
+TEST(ConnectionTest, DefaultClosedState) {
+    Connection conn{};
 
-void test_connection_initial_state() {
-    Connection conn{0, 0, 0, 0, ConnectionState::CLOSED};
-    assert(conn.state == ConnectionState::CLOSED);
+    EXPECT_EQ(conn.state, ConnectionState::CLOSED);
 }
 
-void test_connection_syn_received() {
-    Connection conn{0, 0, 0, 0, ConnectionState::SYN_RECEIVED};
-    assert(conn.state == ConnectionState::SYN_RECEIVED);
-}
+TEST(ConnectionTest, EstablishedState) {
+    Connection conn{
+        {1,2,1000,80},
+        ConnectionState::ESTABLISHED,
+        10,
+        20
+    };
 
-void test_connection_established() {
-    Connection conn{0, 0, 0, 0, ConnectionState::ESTABLISHED};
-    assert(conn.state == ConnectionState::ESTABLISHED);
+    EXPECT_EQ(conn.state, ConnectionState::ESTABLISHED);
+    EXPECT_EQ(conn.last_seq, 10u);
+    EXPECT_EQ(conn.last_ack, 20u);
 }
-
-void test_connection_fin_wait() {
-    Connection conn{0, 0, 0, 0, ConnectionState::FIN_WAIT};
-    assert(conn.state == ConnectionState::FIN_WAIT);
-}
-

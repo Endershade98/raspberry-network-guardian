@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/endershade/Projects/raspberry-network-guardian/src
+CXX_INCLUDES = -I/home/endershade/Projects/raspberry-network-guardian/src -isystem /home/endershade/Projects/raspberry-network-guardian/build/_deps/googletest-src/googletest/include -isystem /home/endershade/Projects/raspberry-network-guardian/build/_deps/googletest-src/googletest
 
 CXX_FLAGS = -std=gnu++17 -Wall -Wextra -Wpedantic
 

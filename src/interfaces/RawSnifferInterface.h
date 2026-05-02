@@ -1,10 +1,11 @@
 // src/interfaces/RawSnifferInterface.h
+
 #pragma once
+
 #include <functional>
 #include <cstdint>
 
-namespace interfaces{
-    class RawSocketSnifferInterface {
+class RawSocketSnifferInterface {
     public:
         using PacketCallback = std::function<void(const uint8_t*, size_t)>;
 
@@ -14,5 +15,4 @@ namespace interfaces{
         virtual void stop() = 0;
         
         virtual void setCallback(PacketCallback cb) = 0;
-    };
-}
+};

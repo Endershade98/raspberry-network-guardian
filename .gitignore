@@ -39,3 +39,27 @@
 
 # debug information files
 *.dwo
+
+# Cartelle di build comuni
+build/
+build-*/
+Build/
+bin/
+
+# CMake cache e file generati
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CMakeOutput.log
+CMakeError.log
+install_manifest.txt
+cmake_install.cmake
+CTestTestfile.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
+
+# File specifici di IDE/Editor
+.vs/
+.vscode/
+.idea/
+*.user

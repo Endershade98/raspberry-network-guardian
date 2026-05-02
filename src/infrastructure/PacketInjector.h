@@ -1,13 +1,16 @@
 // src/infrastructure/PacketInjector.h
+
 #pragma once
+
 #include "../interfaces/RawSnifferInterface.h"
+
 #include <string>
+#include<stdlib.h>
 
 using namespace std;
-using namespace interfaces;
 
-namespace infrastructure {
-    class PacketInjector {
+
+class PacketInjector {
     public:
         explicit PacketInjector(const string& interface);
         ~PacketInjector();
@@ -17,5 +20,4 @@ namespace infrastructure {
     private:
         int sockfd;
         string interface;
-    };
-}
+};
