@@ -1,4 +1,5 @@
 // src/infrastructure/RawSocketSniffer.cpp
+
 #include "RawSocketSniffer.h"
 
 #include <sys/socket.h>
@@ -13,11 +14,9 @@
 #include <netinet/in.h>
 
 using namespace std;
-using namespace interfaces;
-using namespace infrastructure;
 
-RawSocketSniffer::RawSocketSniffer(const string& iface)
-    : interface(iface), running(IS_RUNNING), sockfd(-1) {}
+RawSocketSniffer::RawSocketSniffer(const std::string& iface)
+    : interface(iface), running(false), sockfd(-1) {}
 
 RawSocketSniffer::~RawSocketSniffer() {
     stop();
@@ -49,14 +48,14 @@ bool RawSocketSniffer::start() {
         return false;
     }
 
-    running = !IS_RUNNING;
+    running = true;
     worker = std::thread(&RawSocketSniffer::captureLoop, this);
 
     return true;
 }
 
 void RawSocketSniffer::stop() {
-    running = IS_RUNNING;
+    running = false;
 
     if (sockfd != -1) {
         close(sockfd);
@@ -71,7 +70,7 @@ void RawSocketSniffer::stop() {
 void RawSocketSniffer::captureLoop() {
     uint8_t buffer[BUFFER_SIZE];
 
-    while (IS_RUNNING == running) {
+    while (running) {
         ssize_t len = recvfrom(sockfd, buffer, sizeof(buffer), 0, nullptr, nullptr);
 
         if (len <= 0) continue;

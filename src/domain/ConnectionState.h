@@ -1,4 +1,5 @@
 // src/domain/ConnectionState.h
+
 #pragma once
 
 enum class ConnectionState {

@@ -1,11 +1,10 @@
 // src/main.cpp
+
 #include "infrastructure/RawSocketSniffer.h"
 #include <iostream>
 #include <csignal>
 #include <unistd.h>
-
 using namespace std;
-using namespace infrastructure;
 
 void signalHandler(int signum) {
     cout << "Interrupt signal (" << signum << ") received.\n";

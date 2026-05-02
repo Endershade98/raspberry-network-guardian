@@ -95,6 +95,51 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"gmock\" \"gtest\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles /home/endershade/Projects/raspberry-network-guardian/build//CMakeFiles/progress.marks
@@ -152,6 +197,274 @@ test_runner/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/build
 .PHONY : test_runner/fast
 
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
+
+src/application/ConnectionTracker.o: src/application/ConnectionTracker.cpp.o
+.PHONY : src/application/ConnectionTracker.o
+
+# target to build an object file
+src/application/ConnectionTracker.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/application/ConnectionTracker.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/application/ConnectionTracker.cpp.o
+.PHONY : src/application/ConnectionTracker.cpp.o
+
+src/application/ConnectionTracker.i: src/application/ConnectionTracker.cpp.i
+.PHONY : src/application/ConnectionTracker.i
+
+# target to preprocess a source file
+src/application/ConnectionTracker.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/application/ConnectionTracker.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/application/ConnectionTracker.cpp.i
+.PHONY : src/application/ConnectionTracker.cpp.i
+
+src/application/ConnectionTracker.s: src/application/ConnectionTracker.cpp.s
+.PHONY : src/application/ConnectionTracker.s
+
+# target to generate assembly for a file
+src/application/ConnectionTracker.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/application/ConnectionTracker.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/application/ConnectionTracker.cpp.s
+.PHONY : src/application/ConnectionTracker.cpp.s
+
+src/application/PacketParser.o: src/application/PacketParser.cpp.o
+.PHONY : src/application/PacketParser.o
+
+# target to build an object file
+src/application/PacketParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/application/PacketParser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/application/PacketParser.cpp.o
+.PHONY : src/application/PacketParser.cpp.o
+
+src/application/PacketParser.i: src/application/PacketParser.cpp.i
+.PHONY : src/application/PacketParser.i
+
+# target to preprocess a source file
+src/application/PacketParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/application/PacketParser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/application/PacketParser.cpp.i
+.PHONY : src/application/PacketParser.cpp.i
+
+src/application/PacketParser.s: src/application/PacketParser.cpp.s
+.PHONY : src/application/PacketParser.s
+
+# target to generate assembly for a file
+src/application/PacketParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/application/PacketParser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/application/PacketParser.cpp.s
+.PHONY : src/application/PacketParser.cpp.s
+
+src/infrastructure/PacketInjector.o: src/infrastructure/PacketInjector.cpp.o
+.PHONY : src/infrastructure/PacketInjector.o
+
+# target to build an object file
+src/infrastructure/PacketInjector.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/PacketInjector.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/PacketInjector.cpp.o
+.PHONY : src/infrastructure/PacketInjector.cpp.o
+
+src/infrastructure/PacketInjector.i: src/infrastructure/PacketInjector.cpp.i
+.PHONY : src/infrastructure/PacketInjector.i
+
+# target to preprocess a source file
+src/infrastructure/PacketInjector.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/PacketInjector.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/PacketInjector.cpp.i
+.PHONY : src/infrastructure/PacketInjector.cpp.i
+
+src/infrastructure/PacketInjector.s: src/infrastructure/PacketInjector.cpp.s
+.PHONY : src/infrastructure/PacketInjector.s
+
+# target to generate assembly for a file
+src/infrastructure/PacketInjector.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/PacketInjector.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/PacketInjector.cpp.s
+.PHONY : src/infrastructure/PacketInjector.cpp.s
+
+src/infrastructure/RawSocketSniffer.o: src/infrastructure/RawSocketSniffer.cpp.o
+.PHONY : src/infrastructure/RawSocketSniffer.o
+
+# target to build an object file
+src/infrastructure/RawSocketSniffer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/RawSocketSniffer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/RawSocketSniffer.cpp.o
+.PHONY : src/infrastructure/RawSocketSniffer.cpp.o
+
+src/infrastructure/RawSocketSniffer.i: src/infrastructure/RawSocketSniffer.cpp.i
+.PHONY : src/infrastructure/RawSocketSniffer.i
+
+# target to preprocess a source file
+src/infrastructure/RawSocketSniffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/RawSocketSniffer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/RawSocketSniffer.cpp.i
+.PHONY : src/infrastructure/RawSocketSniffer.cpp.i
+
+src/infrastructure/RawSocketSniffer.s: src/infrastructure/RawSocketSniffer.cpp.s
+.PHONY : src/infrastructure/RawSocketSniffer.s
+
+# target to generate assembly for a file
+src/infrastructure/RawSocketSniffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/RawSocketSniffer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/RawSocketSniffer.cpp.s
+.PHONY : src/infrastructure/RawSocketSniffer.cpp.s
+
+src/infrastructure/RedisClient.o: src/infrastructure/RedisClient.cpp.o
+.PHONY : src/infrastructure/RedisClient.o
+
+# target to build an object file
+src/infrastructure/RedisClient.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/RedisClient.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/RedisClient.cpp.o
+.PHONY : src/infrastructure/RedisClient.cpp.o
+
+src/infrastructure/RedisClient.i: src/infrastructure/RedisClient.cpp.i
+.PHONY : src/infrastructure/RedisClient.i
+
+# target to preprocess a source file
+src/infrastructure/RedisClient.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/RedisClient.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/RedisClient.cpp.i
+.PHONY : src/infrastructure/RedisClient.cpp.i
+
+src/infrastructure/RedisClient.s: src/infrastructure/RedisClient.cpp.s
+.PHONY : src/infrastructure/RedisClient.s
+
+# target to generate assembly for a file
+src/infrastructure/RedisClient.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/RedisClient.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/RedisClient.cpp.s
+.PHONY : src/infrastructure/RedisClient.cpp.s
+
+src/infrastructure/SQLiteRepository.o: src/infrastructure/SQLiteRepository.cpp.o
+.PHONY : src/infrastructure/SQLiteRepository.o
+
+# target to build an object file
+src/infrastructure/SQLiteRepository.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/SQLiteRepository.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/SQLiteRepository.cpp.o
+.PHONY : src/infrastructure/SQLiteRepository.cpp.o
+
+src/infrastructure/SQLiteRepository.i: src/infrastructure/SQLiteRepository.cpp.i
+.PHONY : src/infrastructure/SQLiteRepository.i
+
+# target to preprocess a source file
+src/infrastructure/SQLiteRepository.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/SQLiteRepository.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/SQLiteRepository.cpp.i
+.PHONY : src/infrastructure/SQLiteRepository.cpp.i
+
+src/infrastructure/SQLiteRepository.s: src/infrastructure/SQLiteRepository.cpp.s
+.PHONY : src/infrastructure/SQLiteRepository.s
+
+# target to generate assembly for a file
+src/infrastructure/SQLiteRepository.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/infrastructure/SQLiteRepository.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/infrastructure/SQLiteRepository.cpp.s
+.PHONY : src/infrastructure/SQLiteRepository.cpp.s
+
+src/interfaces/CLI.o: src/interfaces/CLI.cpp.o
+.PHONY : src/interfaces/CLI.o
+
+# target to build an object file
+src/interfaces/CLI.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/interfaces/CLI.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/interfaces/CLI.cpp.o
+.PHONY : src/interfaces/CLI.cpp.o
+
+src/interfaces/CLI.i: src/interfaces/CLI.cpp.i
+.PHONY : src/interfaces/CLI.i
+
+# target to preprocess a source file
+src/interfaces/CLI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/interfaces/CLI.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/interfaces/CLI.cpp.i
+.PHONY : src/interfaces/CLI.cpp.i
+
+src/interfaces/CLI.s: src/interfaces/CLI.cpp.s
+.PHONY : src/interfaces/CLI.s
+
+# target to generate assembly for a file
+src/interfaces/CLI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/interfaces/CLI.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/interfaces/CLI.cpp.s
+.PHONY : src/interfaces/CLI.cpp.s
+
+src/interfaces/Logger.o: src/interfaces/Logger.cpp.o
+.PHONY : src/interfaces/Logger.o
+
+# target to build an object file
+src/interfaces/Logger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/interfaces/Logger.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/interfaces/Logger.cpp.o
+.PHONY : src/interfaces/Logger.cpp.o
+
+src/interfaces/Logger.i: src/interfaces/Logger.cpp.i
+.PHONY : src/interfaces/Logger.i
+
+# target to preprocess a source file
+src/interfaces/Logger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/interfaces/Logger.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/interfaces/Logger.cpp.i
+.PHONY : src/interfaces/Logger.cpp.i
+
+src/interfaces/Logger.s: src/interfaces/Logger.cpp.s
+.PHONY : src/interfaces/Logger.s
+
+# target to generate assembly for a file
+src/interfaces/Logger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/interfaces/Logger.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/src/interfaces/Logger.cpp.s
+.PHONY : src/interfaces/Logger.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -176,29 +489,77 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/network_guardian.dir/build.make CMakeFiles/network_guardian.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-tests/test_main.o: tests/test_main.cpp.o
-.PHONY : tests/test_main.o
+tests/e2e/test_full_pipeline.o: tests/e2e/test_full_pipeline.cpp.o
+.PHONY : tests/e2e/test_full_pipeline.o
 
 # target to build an object file
-tests/test_main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/test_main.cpp.o
-.PHONY : tests/test_main.cpp.o
+tests/e2e/test_full_pipeline.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/e2e/test_full_pipeline.cpp.o
+.PHONY : tests/e2e/test_full_pipeline.cpp.o
 
-tests/test_main.i: tests/test_main.cpp.i
-.PHONY : tests/test_main.i
+tests/e2e/test_full_pipeline.i: tests/e2e/test_full_pipeline.cpp.i
+.PHONY : tests/e2e/test_full_pipeline.i
 
 # target to preprocess a source file
-tests/test_main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/test_main.cpp.i
-.PHONY : tests/test_main.cpp.i
+tests/e2e/test_full_pipeline.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/e2e/test_full_pipeline.cpp.i
+.PHONY : tests/e2e/test_full_pipeline.cpp.i
 
-tests/test_main.s: tests/test_main.cpp.s
-.PHONY : tests/test_main.s
+tests/e2e/test_full_pipeline.s: tests/e2e/test_full_pipeline.cpp.s
+.PHONY : tests/e2e/test_full_pipeline.s
 
 # target to generate assembly for a file
-tests/test_main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/test_main.cpp.s
-.PHONY : tests/test_main.cpp.s
+tests/e2e/test_full_pipeline.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/e2e/test_full_pipeline.cpp.s
+.PHONY : tests/e2e/test_full_pipeline.cpp.s
+
+tests/integration/test_sniffer_parser.o: tests/integration/test_sniffer_parser.cpp.o
+.PHONY : tests/integration/test_sniffer_parser.o
+
+# target to build an object file
+tests/integration/test_sniffer_parser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/integration/test_sniffer_parser.cpp.o
+.PHONY : tests/integration/test_sniffer_parser.cpp.o
+
+tests/integration/test_sniffer_parser.i: tests/integration/test_sniffer_parser.cpp.i
+.PHONY : tests/integration/test_sniffer_parser.i
+
+# target to preprocess a source file
+tests/integration/test_sniffer_parser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/integration/test_sniffer_parser.cpp.i
+.PHONY : tests/integration/test_sniffer_parser.cpp.i
+
+tests/integration/test_sniffer_parser.s: tests/integration/test_sniffer_parser.cpp.s
+.PHONY : tests/integration/test_sniffer_parser.s
+
+# target to generate assembly for a file
+tests/integration/test_sniffer_parser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/integration/test_sniffer_parser.cpp.s
+.PHONY : tests/integration/test_sniffer_parser.cpp.s
+
+tests/integration/test_tracker_redis.o: tests/integration/test_tracker_redis.cpp.o
+.PHONY : tests/integration/test_tracker_redis.o
+
+# target to build an object file
+tests/integration/test_tracker_redis.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/integration/test_tracker_redis.cpp.o
+.PHONY : tests/integration/test_tracker_redis.cpp.o
+
+tests/integration/test_tracker_redis.i: tests/integration/test_tracker_redis.cpp.i
+.PHONY : tests/integration/test_tracker_redis.i
+
+# target to preprocess a source file
+tests/integration/test_tracker_redis.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/integration/test_tracker_redis.cpp.i
+.PHONY : tests/integration/test_tracker_redis.cpp.i
+
+tests/integration/test_tracker_redis.s: tests/integration/test_tracker_redis.cpp.s
+.PHONY : tests/integration/test_tracker_redis.s
+
+# target to generate assembly for a file
+tests/integration/test_tracker_redis.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/integration/test_tracker_redis.cpp.s
+.PHONY : tests/integration/test_tracker_redis.cpp.s
 
 tests/unit/test_connection.o: tests/unit/test_connection.cpp.o
 .PHONY : tests/unit/test_connection.o
@@ -224,6 +585,30 @@ tests/unit/test_connection.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_connection.cpp.s
 .PHONY : tests/unit/test_connection.cpp.s
 
+tests/unit/test_connection_tracker.o: tests/unit/test_connection_tracker.cpp.o
+.PHONY : tests/unit/test_connection_tracker.o
+
+# target to build an object file
+tests/unit/test_connection_tracker.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_connection_tracker.cpp.o
+.PHONY : tests/unit/test_connection_tracker.cpp.o
+
+tests/unit/test_connection_tracker.i: tests/unit/test_connection_tracker.cpp.i
+.PHONY : tests/unit/test_connection_tracker.i
+
+# target to preprocess a source file
+tests/unit/test_connection_tracker.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_connection_tracker.cpp.i
+.PHONY : tests/unit/test_connection_tracker.cpp.i
+
+tests/unit/test_connection_tracker.s: tests/unit/test_connection_tracker.cpp.s
+.PHONY : tests/unit/test_connection_tracker.s
+
+# target to generate assembly for a file
+tests/unit/test_connection_tracker.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_connection_tracker.cpp.s
+.PHONY : tests/unit/test_connection_tracker.cpp.s
+
 tests/unit/test_packet.o: tests/unit/test_packet.cpp.o
 .PHONY : tests/unit/test_packet.o
 
@@ -248,6 +633,78 @@ tests/unit/test_packet.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_packet.cpp.s
 .PHONY : tests/unit/test_packet.cpp.s
 
+tests/unit/test_parser.o: tests/unit/test_parser.cpp.o
+.PHONY : tests/unit/test_parser.o
+
+# target to build an object file
+tests/unit/test_parser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_parser.cpp.o
+.PHONY : tests/unit/test_parser.cpp.o
+
+tests/unit/test_parser.i: tests/unit/test_parser.cpp.i
+.PHONY : tests/unit/test_parser.i
+
+# target to preprocess a source file
+tests/unit/test_parser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_parser.cpp.i
+.PHONY : tests/unit/test_parser.cpp.i
+
+tests/unit/test_parser.s: tests/unit/test_parser.cpp.s
+.PHONY : tests/unit/test_parser.s
+
+# target to generate assembly for a file
+tests/unit/test_parser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_parser.cpp.s
+.PHONY : tests/unit/test_parser.cpp.s
+
+tests/unit/test_state_machine.o: tests/unit/test_state_machine.cpp.o
+.PHONY : tests/unit/test_state_machine.o
+
+# target to build an object file
+tests/unit/test_state_machine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_state_machine.cpp.o
+.PHONY : tests/unit/test_state_machine.cpp.o
+
+tests/unit/test_state_machine.i: tests/unit/test_state_machine.cpp.i
+.PHONY : tests/unit/test_state_machine.i
+
+# target to preprocess a source file
+tests/unit/test_state_machine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_state_machine.cpp.i
+.PHONY : tests/unit/test_state_machine.cpp.i
+
+tests/unit/test_state_machine.s: tests/unit/test_state_machine.cpp.s
+.PHONY : tests/unit/test_state_machine.s
+
+# target to generate assembly for a file
+tests/unit/test_state_machine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_state_machine.cpp.s
+.PHONY : tests/unit/test_state_machine.cpp.s
+
+tests/unit/test_tracker.o: tests/unit/test_tracker.cpp.o
+.PHONY : tests/unit/test_tracker.o
+
+# target to build an object file
+tests/unit/test_tracker.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_tracker.cpp.o
+.PHONY : tests/unit/test_tracker.cpp.o
+
+tests/unit/test_tracker.i: tests/unit/test_tracker.cpp.i
+.PHONY : tests/unit/test_tracker.i
+
+# target to preprocess a source file
+tests/unit/test_tracker.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_tracker.cpp.i
+.PHONY : tests/unit/test_tracker.cpp.i
+
+tests/unit/test_tracker.s: tests/unit/test_tracker.cpp.s
+.PHONY : tests/unit/test_tracker.s
+
+# target to generate assembly for a file
+tests/unit/test_tracker.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_runner.dir/build.make CMakeFiles/test_runner.dir/tests/unit/test_tracker.cpp.s
+.PHONY : tests/unit/test_tracker.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -255,22 +712,72 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
 	@echo "... network_guardian"
 	@echo "... test_runner"
+	@echo "... src/application/ConnectionTracker.o"
+	@echo "... src/application/ConnectionTracker.i"
+	@echo "... src/application/ConnectionTracker.s"
+	@echo "... src/application/PacketParser.o"
+	@echo "... src/application/PacketParser.i"
+	@echo "... src/application/PacketParser.s"
+	@echo "... src/infrastructure/PacketInjector.o"
+	@echo "... src/infrastructure/PacketInjector.i"
+	@echo "... src/infrastructure/PacketInjector.s"
+	@echo "... src/infrastructure/RawSocketSniffer.o"
+	@echo "... src/infrastructure/RawSocketSniffer.i"
+	@echo "... src/infrastructure/RawSocketSniffer.s"
+	@echo "... src/infrastructure/RedisClient.o"
+	@echo "... src/infrastructure/RedisClient.i"
+	@echo "... src/infrastructure/RedisClient.s"
+	@echo "... src/infrastructure/SQLiteRepository.o"
+	@echo "... src/infrastructure/SQLiteRepository.i"
+	@echo "... src/infrastructure/SQLiteRepository.s"
+	@echo "... src/interfaces/CLI.o"
+	@echo "... src/interfaces/CLI.i"
+	@echo "... src/interfaces/CLI.s"
+	@echo "... src/interfaces/Logger.o"
+	@echo "... src/interfaces/Logger.i"
+	@echo "... src/interfaces/Logger.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... tests/test_main.o"
-	@echo "... tests/test_main.i"
-	@echo "... tests/test_main.s"
+	@echo "... tests/e2e/test_full_pipeline.o"
+	@echo "... tests/e2e/test_full_pipeline.i"
+	@echo "... tests/e2e/test_full_pipeline.s"
+	@echo "... tests/integration/test_sniffer_parser.o"
+	@echo "... tests/integration/test_sniffer_parser.i"
+	@echo "... tests/integration/test_sniffer_parser.s"
+	@echo "... tests/integration/test_tracker_redis.o"
+	@echo "... tests/integration/test_tracker_redis.i"
+	@echo "... tests/integration/test_tracker_redis.s"
 	@echo "... tests/unit/test_connection.o"
 	@echo "... tests/unit/test_connection.i"
 	@echo "... tests/unit/test_connection.s"
+	@echo "... tests/unit/test_connection_tracker.o"
+	@echo "... tests/unit/test_connection_tracker.i"
+	@echo "... tests/unit/test_connection_tracker.s"
 	@echo "... tests/unit/test_packet.o"
 	@echo "... tests/unit/test_packet.i"
 	@echo "... tests/unit/test_packet.s"
+	@echo "... tests/unit/test_parser.o"
+	@echo "... tests/unit/test_parser.i"
+	@echo "... tests/unit/test_parser.s"
+	@echo "... tests/unit/test_state_machine.o"
+	@echo "... tests/unit/test_state_machine.i"
+	@echo "... tests/unit/test_state_machine.s"
+	@echo "... tests/unit/test_tracker.o"
+	@echo "... tests/unit/test_tracker.i"
+	@echo "... tests/unit/test_tracker.s"
 .PHONY : help
 
 

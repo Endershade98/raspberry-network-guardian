@@ -1,10 +1,6 @@
 // src/application/ConnectionTracker.cpp
-#include "ConnectionTracker.h"
-using namespace domain;
-using namespace std;
-using namespace application;
 
-ConnectionTracker::ConnectionTracker() {}
+#include "ConnectionTracker.h"
 
 ConnectionKey ConnectionTracker::extractKey(const Packet& packet) const {
     return ConnectionKey{
@@ -21,7 +17,11 @@ void ConnectionTracker::processPacket(const Packet& packet) {
     auto it = connections.find(key);
 
     if (it == connections.end()) {
-        // Nuova connessione
+
+        if (!(packet.syn && !packet.ack_flag)) {
+            return;
+        }
+
         Connection conn;
         conn.key = key;
         conn.state = ConnectionState::CLOSED;
@@ -34,21 +34,18 @@ void ConnectionTracker::processPacket(const Packet& packet) {
 
     Connection& conn = it->second;
 
-    // Update state machine
     updateState(conn, packet);
 
-    // Update sequence tracking
     conn.last_seq = packet.seq;
     conn.last_ack = packet.ack;
 
-    // Se chiusa → cleanup
     if (conn.state == ConnectionState::CLOSED) {
         handleClosedConnection(key);
     }
 }
 
 void ConnectionTracker::updateState(Connection& conn, const Packet& packet) {
-    // RST ha priorità assoluta
+
     if (packet.rst) {
         conn.state = ConnectionState::CLOSED;
         return;
@@ -57,48 +54,41 @@ void ConnectionTracker::updateState(Connection& conn, const Packet& packet) {
     switch (conn.state) {
 
         case ConnectionState::CLOSED:
-            if (packet.syn && !packet.ack) {
+            if (packet.syn && !packet.ack_flag)
                 conn.state = ConnectionState::SYN_RECEIVED;
-            }
             break;
 
         case ConnectionState::SYN_RECEIVED:
-            if (packet.ack) {
+            if (packet.ack_flag)
                 conn.state = ConnectionState::ESTABLISHED;
-            }
             break;
 
         case ConnectionState::ESTABLISHED:
-            if (packet.fin) {
+            if (packet.fin)
                 conn.state = ConnectionState::FIN_WAIT;
-            }
             break;
 
         case ConnectionState::FIN_WAIT:
-            if (packet.ack) {
+            if (packet.ack_flag)
                 conn.state = ConnectionState::CLOSED;
-            }
             break;
     }
 }
 
 void ConnectionTracker::handleClosedConnection(const ConnectionKey& key) {
-    // Qui potrai:
-    // - salvare su SQL
-    // - notificare Redis
-    // - loggare evento
-
     connections.erase(key);
 }
 
 std::optional<Connection> ConnectionTracker::getConnection(const ConnectionKey& key) const {
     auto it = connections.find(key);
+
     if (it != connections.end()) {
         return it->second;
     }
+
     return std::nullopt;
 }
 
-size_t ConnectionTracker::getActiveConnectionsCount() const {
+std::size_t ConnectionTracker::getActiveConnectionsCount() const {
     return connections.size();
 }

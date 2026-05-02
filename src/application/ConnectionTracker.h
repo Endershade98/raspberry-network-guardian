@@ -1,35 +1,30 @@
 // src/application/ConnectionTracker.h
+
 #pragma once
 
 #include <unordered_map>
-#include <cstdint>
 #include <optional>
+#include <cstddef>
+
 #include "../domain/Connection.h"
-#include "../domain/ConnectionKey.h"
-#include "../domain/ConnectionState.h"
 #include "../domain/Packet.h"
 
-using namespace domain;
-using namespace std;
+class ConnectionTracker {
+public:
+    ConnectionTracker() = default;
 
-namespace application {
-    class ConnectionTracker {
-    public:
-        ConnectionTracker();
+    void processPacket(const Packet& packet);
 
-        void processPacket(const Packet& packet);
+    std::optional<Connection> getConnection(const ConnectionKey& key) const;
 
-        std::optional<Connection> getConnection(const ConnectionKey& key) const;
+    std::size_t getActiveConnectionsCount() const;
 
-        size_t getActiveConnectionsCount() const;
+private:
+    std::unordered_map<ConnectionKey, Connection, ConnectionKeyHash> connections;
 
-    private:
-        std::unordered_map<ConnectionKey, Connection, ConnectionKeyHash> connections;
+    ConnectionKey extractKey(const Packet& packet) const;
 
-        ConnectionKey extractKey(const Packet& packet) const;
+    void updateState(Connection& conn, const Packet& packet);
 
-        void updateState(Connection& conn, const Packet& packet);
-
-        void handleClosedConnection(const ConnectionKey& key);
-    };
-}
+    void handleClosedConnection(const ConnectionKey& key);
+};

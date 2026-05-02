@@ -1,2 +1,10 @@
-AllTests 4 0.00128734
+ConnectionTest.DefaultClosedState 1 0.00247191
+ConnectionTest.EstablishedState 1 0.00207049
+ConnectionTrackerTest.CreatesNewConnectionOnSYN 1 0.00173975
+ConnectionTrackerTest.CompletesHandshake 1 0.00186151
+ConnectionTrackerTest.ClosesConnectionOnRST 1 0.00127517
+ConnectionTrackerTest.TracksMultipleConnections 1 0.00134434
+ConnectionTrackerTest.IgnoresInvalidAckAsFirstPacket 1 0.00147789
+PacketTest.DefaultConstruction 1 0.00150722
+ConnectionTrackerBasicTest.StartsEmpty 1 0.00234797
 ---
