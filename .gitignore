@@ -63,3 +63,14 @@ CPackSourceConfig.cmake
 .vscode/
 .idea/
 *.user
+
+build/
+.cache/
+*.o
+*.gcda
+*.gcno
+*.info
+coverage-html/
+.vscode/
+.idea/
+compile_commands.json

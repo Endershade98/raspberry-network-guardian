@@ -6,26 +6,22 @@
 #include <unistd.h>
 using namespace std;
 
-void signalHandler(int signum) {
-    cout << "Interrupt signal (" << signum << ") received.\n";
-    exit(signum);
-}
 
 int main() {
-
     RawSocketSniffer sniffer("eth0");
 
-    sniffer.setCallback([](const uint8_t* data, size_t len) {
-        cout << "Packet captured: " << len << " bytes\n";
+    sniffer.setCallback([](const uint8_t*, size_t len) {
+        std::cout << "Packet captured: " << len << " bytes\n";
     });
 
     if (!sniffer.start()) {
-        cerr << "Failed to start sniffer\n";
+        std::cerr << "Failed\n";
         return 1;
     }
 
-    cout << "Sniffer running... Ctrl+C to stop\n";
+    std::cout << "Running...\n";
 
-    signal(SIGINT, signalHandler);
-    pause();
+    pause(); // oppure CLI controller
+
+    sniffer.stop();
 }
