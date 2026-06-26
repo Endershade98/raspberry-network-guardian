@@ -74,3 +74,5 @@ coverage-html/
 .vscode/
 .idea/
 compile_commands.json
+
+docs/raspberry-pi5-setup.md

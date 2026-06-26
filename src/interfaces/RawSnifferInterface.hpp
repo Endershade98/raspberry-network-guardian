@@ -1,4 +1,4 @@
-// src/interfaces/RawSnifferInterface.h
+// src/interfaces/RawSnifferInterface.hpp
 
 #pragma once
 

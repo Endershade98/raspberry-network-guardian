@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../interfaces/RawSnifferInterface.h"
+#include "../interfaces/RawSnifferInterface.hpp"
 
 #include <string>
 #include<stdlib.h>

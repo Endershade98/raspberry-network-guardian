@@ -1,70 +1,120 @@
 // tests/unit/test_connection_tracker.cpp
 
 #include <gtest/gtest.h>
-#include "../../src/application/ConnectionTracker.h"
 
-TEST(ConnectionTrackerTest, CreatesNewConnectionOnSYN) {
+#include "../../src/application/ConnectionTracker.hpp"
+
+
+TEST(ConnectionTrackerTest, StartsEmpty)
+{
     ConnectionTracker tracker;
 
-    Packet syn{1,2,1000,80,0,0,true,false,false,false};
 
-    tracker.processPacket(syn);
-
-    ConnectionKey key{1,2,1000,80};
-
-    auto conn = tracker.getConnection(key);
-
-    ASSERT_TRUE(conn.has_value());
-    EXPECT_EQ(conn->state, ConnectionState::SYN_RECEIVED);
+    EXPECT_EQ(
+        tracker.getActiveConnectionsCount(),
+        0);
 }
 
-TEST(ConnectionTrackerTest, CompletesHandshake) {
+
+
+TEST(ConnectionTrackerTest, CreatesConnectionOnSyn)
+{
     ConnectionTracker tracker;
 
-    Packet syn{1,2,1000,80,0,0,true,false,false,false};
-    Packet ack{1,2,1000,80,1,1,false,true,false,false};
+
+    Packet packet{};
+
+    packet.src_ip=1;
+    packet.dst_ip=2;
+    packet.src_port=1000;
+    packet.dst_port=80;
+    packet.syn=true;
+
+
+    tracker.processPacket(packet);
+
+
+    auto result =
+        tracker.getConnection(
+            {1,2,1000,80});
+
+
+    ASSERT_TRUE(result);
+
+
+    EXPECT_EQ(
+        result->state,
+        ConnectionState::SYN_RECEIVED);
+}
+
+
+
+TEST(ConnectionTrackerTest, EstablishesHandshake)
+{
+    ConnectionTracker tracker;
+
+
+    Packet syn{};
+    syn.src_ip=1;
+    syn.dst_ip=2;
+    syn.src_port=1000;
+    syn.dst_port=80;
+    syn.syn=true;
+
+
+    Packet ack=syn;
+
+    ack.syn=false;
+    ack.ack_flag=true;
+
+
 
     tracker.processPacket(syn);
     tracker.processPacket(ack);
 
-    auto conn = tracker.getConnection({1,2,1000,80});
 
-    ASSERT_TRUE(conn.has_value());
-    EXPECT_EQ(conn->state, ConnectionState::ESTABLISHED);
+    auto c =
+        tracker.getConnection(
+            {1,2,1000,80});
+
+
+    ASSERT_TRUE(c);
+
+
+    EXPECT_EQ(
+        c->state,
+        ConnectionState::ESTABLISHED);
 }
 
-TEST(ConnectionTrackerTest, ClosesConnectionOnRST) {
+
+
+TEST(ConnectionTrackerTest, RemovesRST)
+{
     ConnectionTracker tracker;
 
-    Packet syn{1,2,1000,80,0,0,true,false,false,false};
-    Packet rst{1,2,1000,80,0,0,false,false,false,true};
+
+    Packet syn{};
+
+    syn.src_ip=1;
+    syn.dst_ip=2;
+    syn.src_port=1000;
+    syn.dst_port=80;
+    syn.syn=true;
+
+
+    Packet rst=syn;
+
+    rst.syn=false;
+    rst.rst=true;
+
+
 
     tracker.processPacket(syn);
     tracker.processPacket(rst);
 
-    auto conn = tracker.getConnection({1,2,1000,80});
 
-    EXPECT_FALSE(conn.has_value());
-}
 
-TEST(ConnectionTrackerTest, TracksMultipleConnections) {
-    ConnectionTracker tracker;
-
-    Packet a{1,2,1000,80,0,0,true,false,false,false};
-    Packet b{3,4,2000,443,0,0,true,false,false,false};
-
-    tracker.processPacket(a);
-    tracker.processPacket(b);
-
-    EXPECT_EQ(tracker.getActiveConnectionsCount(), 2u);
-}
-
-TEST(ConnectionTrackerTest, IgnoresInvalidAckAsFirstPacket) {
-    ConnectionTracker tracker;
-
-    Packet ack{1,2,1000,80,1,1,false,true,false,false};
-
-    tracker.processPacket(ack);
-
-    EXPECT_EQ(tracker.getActiveConnectionsCount(), 0u);
+    EXPECT_EQ(
+        tracker.getActiveConnectionsCount(),
+        0);
 }

@@ -4,8 +4,8 @@
 
 #include <cstdint>
 
-#include "ConnectionKey.h"
-#include "ConnectionState.h"
+#include "ConnectionKey.hpp"
+#include "ConnectionState.hpp"
 
 struct Connection {
     ConnectionKey key{};

@@ -1,7 +1,7 @@
 // tests/unit/test_raw_socket_sniffer.cpp
 
 #include <gtest/gtest.h>
-#include "../../src/infrastructure/RawSocketSniffer.h"
+#include "../../src/infrastructure/RawSocketSniffer.hpp"
 
 TEST(RawSocketSnifferTest, CanConstruct)
 {

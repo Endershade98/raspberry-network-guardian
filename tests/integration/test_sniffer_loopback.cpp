@@ -1,7 +1,7 @@
 // tests/integration/test_sniffer_loopback.cpp
 
 #include <gtest/gtest.h>
-#include "../../src/infrastructure/RawSocketSniffer.h"
+#include "../../src/infrastructure/RawSocketSniffer.hpp"
 
 #include <thread>
 #include <chrono>

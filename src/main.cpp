@@ -1,6 +1,6 @@
 // src/main.cpp
 
-#include "infrastructure/RawSocketSniffer.h"
+#include "infrastructure/RawSocketSniffer.hpp"
 #include <iostream>
 #include <csignal>
 #include <unistd.h>

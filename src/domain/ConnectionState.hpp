@@ -3,8 +3,9 @@
 #pragma once
 
 enum class ConnectionState {
-    CLOSED = 0,
+    CLOSED,
     SYN_RECEIVED,
     ESTABLISHED,
-    FIN_WAIT
+    FIN_WAIT,
+    TIME_WAIT
 };

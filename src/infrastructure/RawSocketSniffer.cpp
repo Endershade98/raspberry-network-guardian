@@ -1,6 +1,6 @@
 // src/infrastructure/RawSocketSniffer.cpp
 
-#include "RawSocketSniffer.h"
+#include "RawSocketSniffer.hpp"
 
 #include <sys/socket.h>
 #include <netpacket/packet.h>

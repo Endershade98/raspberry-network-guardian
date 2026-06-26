@@ -1,0 +1,489 @@
+\n===== src/application/PacketParser.cpp =====\n
+// src/application/PacketParser.cpp
+
+#include "PacketParser.hpp"
+
+#include <arpa/inet.h>
+#include <cstring>
+
+namespace
+{
+    constexpr std::size_t ETHERNET_HEADER_SIZE = 14;
+    constexpr uint16_t ETHERTYPE_IPV4 = 0x0800;
+    constexpr uint8_t IPPROTO_TCP_VALUE = 6;
+}
+
+std::optional<ParsedPacket> PacketParser::parse(
+    const uint8_t* buffer,
+    std::size_t length) const
+{
+    ParsedPacket packet{};
+
+    if (!parseEthernet(
+            buffer,
+            length,
+            packet.ethernet))
+    {
+        return std::nullopt;
+    }
+
+    std::size_t tcpOffset = 0;
+
+    if (!parseIPv4(
+            buffer,
+            length,
+            packet.ipv4,
+            tcpOffset))
+    {
+        return std::nullopt;
+    }
+
+    if (!parseTCP(
+            buffer,
+            length,
+            tcpOffset,
+            packet.tcp))
+    {
+        return std::nullopt;
+    }
+
+    return packet;
+}
+
+bool PacketParser::parseEthernet(
+    const uint8_t* buffer,
+    std::size_t length,
+    EthernetHeader& header) const
+{
+    if (length < ETHERNET_HEADER_SIZE)
+    {
+        return false;
+    }
+
+    std::memcpy(
+        header.destination,
+        buffer,
+        6);
+
+    std::memcpy(
+        header.source,
+        buffer + 6,
+        6);
+
+    header.etherType =
+        ntohs(*reinterpret_cast<const uint16_t*>(buffer + 12));
+
+    return header.etherType == ETHERTYPE_IPV4;
+}
+
+bool PacketParser::parseIPv4(
+    const uint8_t* buffer,
+    std::size_t length,
+    IPv4Header& header,
+    std::size_t& headerOffset) const
+{
+    constexpr std::size_t ethernetOffset = 14;
+
+    if (length < ethernetOffset + 20)
+    {
+        return false;
+    }
+
+    const uint8_t* ip = buffer + ethernetOffset;
+
+    header.version = ip[0] >> 4;
+    header.ihl = ip[0] & 0x0F;
+
+    if (header.version != 4)
+    {
+        return false;
+    }
+
+    if (header.ihl < 5)
+    {
+        return false;
+    }
+
+    header.totalLength =
+        ntohs(*reinterpret_cast<const uint16_t*>(ip + 2));
+
+    header.protocol = ip[9];
+
+    if (header.protocol != IPPROTO_TCP_VALUE)
+    {
+        return false;
+    }
+
+    header.sourceAddress =
+        ntohl(*reinterpret_cast<const uint32_t*>(ip + 12));
+
+    header.destinationAddress =
+        ntohl(*reinterpret_cast<const uint32_t*>(ip + 16));
+
+    headerOffset =
+        ethernetOffset +
+        static_cast<std::size_t>(header.ihl) * 4;
+
+    return true;
+}
+
+bool PacketParser::parseTCP(
+    const uint8_t* buffer,
+    std::size_t length,
+    std::size_t offset,
+    TCPHeader& header) const
+{
+    if (length < offset + 20)
+    {
+        return false;
+    }
+
+    const uint8_t* tcp = buffer + offset;
+
+    header.sourcePort =
+        ntohs(*reinterpret_cast<const uint16_t*>(tcp));
+
+    header.destinationPort =
+        ntohs(*reinterpret_cast<const uint16_t*>(tcp + 2));
+
+    header.sequenceNumber =
+        ntohl(*reinterpret_cast<const uint32_t*>(tcp + 4));
+
+    header.acknowledgementNumber =
+        ntohl(*reinterpret_cast<const uint32_t*>(tcp + 8));
+
+    uint8_t flags = tcp[13];
+
+    header.fin = (flags & 0x01) != 0;
+    header.syn = (flags & 0x02) != 0;
+    header.rst = (flags & 0x04) != 0;
+    header.ack = (flags & 0x10) != 0;
+
+    return true;
+}\n===== src/application/ConnectionTracker.cpp =====\n
+// src/application/ConnectionTracker.cpp
+
+#include "ConnectionTracker.hpp"
+
+ConnectionKey ConnectionTracker::extractKey(const Packet& packet) const {
+    return ConnectionKey{
+        packet.src_ip,
+        packet.dst_ip,
+        packet.src_port,
+        packet.dst_port
+    };
+}
+
+void ConnectionTracker::processPacket(const Packet& packet) {
+    ConnectionKey key = extractKey(packet);
+
+    auto it = connections.find(key);
+
+    if (it == connections.end()) {
+
+        if (!(packet.syn && !packet.ack_flag)) {
+            return;
+        }
+
+        Connection conn;
+        conn.key = key;
+        conn.state = ConnectionState::CLOSED;
+        conn.last_seq = packet.seq;
+        conn.last_ack = packet.ack;
+
+        connections[key] = conn;
+        it = connections.find(key);
+    }
+
+    Connection& conn = it->second;
+
+    updateState(conn, packet);
+
+    conn.last_seq = packet.seq;
+    conn.last_ack = packet.ack;
+
+    if (conn.state == ConnectionState::CLOSED) {
+        handleClosedConnection(key);
+    }
+}
+
+void ConnectionTracker::updateState(Connection& conn, const Packet& packet) {
+
+    if (packet.rst) {
+        conn.state = ConnectionState::CLOSED;
+        return;
+    }
+
+    switch (conn.state) {
+
+        case ConnectionState::CLOSED:
+            if (packet.syn && !packet.ack_flag)
+                conn.state = ConnectionState::SYN_RECEIVED;
+            break;
+
+        case ConnectionState::SYN_RECEIVED:
+            if (packet.ack_flag)
+                conn.state = ConnectionState::ESTABLISHED;
+            break;
+
+        case ConnectionState::ESTABLISHED:
+            if (packet.fin)
+                conn.state = ConnectionState::FIN_WAIT;
+            break;
+
+        case ConnectionState::FIN_WAIT:
+            if (packet.ack_flag)
+                conn.state = ConnectionState::CLOSED;
+            break;
+    }
+}
+
+void ConnectionTracker::handleClosedConnection(const ConnectionKey& key) {
+    connections.erase(key);
+}
+
+std::optional<Connection> ConnectionTracker::getConnection(const ConnectionKey& key) const {
+    auto it = connections.find(key);
+
+    if (it != connections.end()) {
+        return it->second;
+    }
+
+    return std::nullopt;
+}
+
+std::size_t ConnectionTracker::getActiveConnectionsCount() const {
+    return connections.size();
+}\n===== src/application/PacketMapper.cpp =====\n
+// src/application/PacketMapper.cpp
+
+#include "PacketMapper.hpp"
+
+
+
+Packet PacketMapper::map(
+    const ParsedPacket& parsed) const
+{
+
+    Packet packet{};
+
+
+    packet.src_ip =
+        parsed.ipv4.sourceAddress;
+
+
+    packet.dst_ip =
+        parsed.ipv4.destinationAddress;
+
+
+    packet.src_port =
+        parsed.tcp.sourcePort;
+
+
+    packet.dst_port =
+        parsed.tcp.destinationPort;
+
+
+
+    packet.seq =
+        parsed.tcp.sequenceNumber;
+
+
+    packet.ack =
+        parsed.tcp.acknowledgementNumber;
+
+
+
+    packet.syn =
+        parsed.tcp.syn;
+
+
+    packet.ack_flag =
+        parsed.tcp.ack;
+
+
+    packet.fin =
+        parsed.tcp.fin;
+
+
+    packet.rst =
+        parsed.tcp.rst;
+
+
+
+    return packet;
+}\n===== src/infrastructure/PacketInjector.cpp =====\n
+// src/infrastructure/PacketInjector.cpp\n===== src/infrastructure/RawSocketSniffer.cpp =====\n
+// src/infrastructure/RawSocketSniffer.cpp
+
+#include "RawSocketSniffer.hpp"
+
+#include <sys/socket.h>
+#include <netpacket/packet.h>
+#include <net/ethernet.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <cstring>
+#include <iostream>
+#include <netinet/in.h>
+#include <sys/time.h>
+#include <cerrno>
+
+using namespace std;
+
+RawSocketSniffer::RawSocketSniffer(const std::string& iface)
+    : sockfd(-1),
+      interface(iface),
+      running(false) {}
+
+RawSocketSniffer::~RawSocketSniffer() {
+    stop();
+}
+
+bool RawSocketSniffer::start() {
+    if (running) {
+        return true;
+    }
+
+    sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+
+    if (sockfd < 0) {
+        perror("socket");
+        return false;
+    }
+
+    // Professional solution:
+    // make recvfrom() wake up periodically so stop() is responsive
+    timeval timeout{};
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+
+    if (setsockopt(sockfd,
+                   SOL_SOCKET,
+                   SO_RCVTIMEO,
+                   &timeout,
+                   sizeof(timeout)) < 0) {
+        perror("setsockopt");
+        close(sockfd);
+        sockfd = -1;
+        return false;
+    }
+
+    struct ifreq ifr{};
+    std::strncpy(ifr.ifr_name, interface.c_str(), IFNAMSIZ - 1);
+    ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+
+    if (ioctl(sockfd, SIOCGIFINDEX, &ifr) < 0) {
+        perror("ioctl");
+        close(sockfd);
+        sockfd = -1;
+        return false;
+    }
+
+    sockaddr_ll sll{};
+    sll.sll_family   = AF_PACKET;
+    sll.sll_ifindex  = ifr.ifr_ifindex;
+    sll.sll_protocol = htons(ETH_P_ALL);
+
+    if (bind(sockfd,
+             reinterpret_cast<sockaddr*>(&sll),
+             sizeof(sll)) < 0) {
+        perror("bind");
+        close(sockfd);
+        sockfd = -1;
+        return false;
+    }
+
+    running = true;
+    worker = std::thread(&RawSocketSniffer::captureLoop, this);
+
+    return true;
+}
+
+void RawSocketSniffer::stop() {
+    running = false;
+
+    if (worker.joinable()) {
+        worker.join();
+    }
+
+    if (sockfd != -1) {
+        close(sockfd);
+        sockfd = -1;
+    }
+}
+
+void RawSocketSniffer::captureLoop() {
+    uint8_t buffer[BUFFER_SIZE];
+
+    while (running) {
+        ssize_t len = recvfrom(
+            sockfd,
+            buffer,
+            sizeof(buffer),
+            0,
+            nullptr,
+            nullptr
+        );
+
+        if (!running) {
+            break;
+        }
+
+        // timeout or interrupted syscall
+        if (len < 0) {
+            if (errno == EAGAIN ||
+                errno == EWOULDBLOCK ||
+                errno == EINTR) {
+                continue;
+            }
+
+            // socket closed or fatal error
+            break;
+        }
+
+        if (len == 0) {
+            continue;
+        }
+
+        if (callback) {
+            callback(buffer, static_cast<size_t>(len));
+        }
+    }
+}
+
+void RawSocketSniffer::setCallback(PacketCallback cb) {
+    callback = std::move(cb);
+}\n===== src/infrastructure/RedisClient.cpp =====\n
+// src/infrastructure/RedisClient.cpp\n===== src/infrastructure/SQLiteRepository.cpp =====\n
+// src/infrastructure/SQLiteRepository.cpp\n===== src/interfaces/CLI.cpp =====\n
+// src/interfaces/CLI.cpp\n===== src/interfaces/Logger.cpp =====\n
+// src/interfaces/Logger.cpp\n===== src/main.cpp =====\n
+// src/main.cpp
+
+#include "infrastructure/RawSocketSniffer.hpp"
+#include <iostream>
+#include <csignal>
+#include <unistd.h>
+using namespace std;
+
+
+int main() {
+    RawSocketSniffer sniffer("eth0");
+
+    sniffer.setCallback([](const uint8_t*, size_t len) {
+        std::cout << "Packet captured: " << len << " bytes\n";
+    });
+
+    if (!sniffer.start()) {
+        std::cerr << "Failed\n";
+        return 1;
+    }
+
+    std::cout << "Running...\n";
+
+    pause(); // oppure CLI controller
+
+    sniffer.stop();
+}
