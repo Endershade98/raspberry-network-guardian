@@ -1,5 +1,7 @@
 /home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/network_guardian.dir
-/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/test_runner.dir
+/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/unit_tests.dir
+/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/integration_tests.dir
+/home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/e2e_tests.dir
 /home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/test.dir
 /home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/edit_cache.dir
 /home/endershade/Projects/raspberry-network-guardian/build/CMakeFiles/rebuild_cache.dir

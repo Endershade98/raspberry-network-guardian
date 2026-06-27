@@ -63,3 +63,17 @@ CPackSourceConfig.cmake
 .vscode/
 .idea/
 *.user
+
+build/
+.cache/
+*.o
+*.gcda
+*.gcno
+*.info
+coverage-html/
+.vscode/
+.idea/
+compile_commands.json
+
+docs/raspberry-pi5-setup.md
+docs/roadmap.md

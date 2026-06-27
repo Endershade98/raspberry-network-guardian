@@ -1,7 +1,7 @@
 // tests/unit/test_connection.cpp
 
 #include <gtest/gtest.h>
-#include "../../src/domain/Connection.h"
+#include "../../src/domain/Connection.hpp"
 
 TEST(ConnectionTest, DefaultClosedState) {
     Connection conn{};
