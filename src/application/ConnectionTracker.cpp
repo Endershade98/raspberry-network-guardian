@@ -34,44 +34,17 @@ void ConnectionTracker::processPacket(const Packet& packet) {
 
     Connection& conn = it->second;
 
-    updateState(conn, packet);
+    conn.state = 
+        stateMachine.transition(
+            conn.state,
+            packet
+        );
 
     conn.last_seq = packet.seq;
     conn.last_ack = packet.ack;
 
     if (conn.state == ConnectionState::CLOSED) {
         handleClosedConnection(key);
-    }
-}
-
-void ConnectionTracker::updateState(Connection& conn, const Packet& packet) {
-
-    if (packet.rst) {
-        conn.state = ConnectionState::CLOSED;
-        return;
-    }
-
-    switch (conn.state) {
-
-        case ConnectionState::CLOSED:
-            if (packet.syn && !packet.ack_flag)
-                conn.state = ConnectionState::SYN_RECEIVED;
-            break;
-
-        case ConnectionState::SYN_RECEIVED:
-            if (packet.ack_flag)
-                conn.state = ConnectionState::ESTABLISHED;
-            break;
-
-        case ConnectionState::ESTABLISHED:
-            if (packet.fin)
-                conn.state = ConnectionState::FIN_WAIT;
-            break;
-
-        case ConnectionState::FIN_WAIT:
-            if (packet.ack_flag)
-                conn.state = ConnectionState::CLOSED;
-            break;
     }
 }
 

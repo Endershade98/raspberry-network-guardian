@@ -9,7 +9,7 @@
 
 #include "../domain/Connection.hpp"
 #include "../domain/Packet.hpp"
-
+#include "../domain/StateMachine.hpp"
 
 class ConnectionTracker
 {
@@ -55,4 +55,6 @@ private:
 
     void handleClosedConnection(
         const ConnectionKey&);
+
+    StateMachine stateMachine;
 };

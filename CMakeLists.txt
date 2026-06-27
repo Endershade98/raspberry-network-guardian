@@ -52,6 +52,9 @@ set(APP_SOURCES
     src/application/ConnectionTracker.cpp
     src/application/PacketParser.cpp
     src/application/PacketMapper.cpp
+
+    src/domain/StateMachine.cpp
+
     src/infrastructure/PacketInjector.cpp
     src/infrastructure/RawSocketSniffer.cpp
     src/infrastructure/RedisClient.cpp
