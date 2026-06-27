@@ -1,11 +1,11 @@
 // src/application/PacketMapper.cpp
 
-#include "PacketMapper.hpp"
-
+#include <network_guardian/application/PacketMapper.hpp>
 
 
 Packet PacketMapper::map(
-    const ParsedPacket& parsed) const
+    const ParsedPacket& parsed
+) const
 {
 
     Packet packet{};
@@ -27,14 +27,12 @@ Packet PacketMapper::map(
         parsed.tcp.destinationPort;
 
 
-
     packet.seq =
         parsed.tcp.sequenceNumber;
 
 
     packet.ack =
         parsed.tcp.acknowledgementNumber;
-
 
 
     packet.syn =
@@ -51,7 +49,6 @@ Packet PacketMapper::map(
 
     packet.rst =
         parsed.tcp.rst;
-
 
 
     return packet;

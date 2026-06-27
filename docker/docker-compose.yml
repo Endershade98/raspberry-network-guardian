@@ -1,0 +1,40 @@
+services:
+
+  build:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+
+    volumes:
+      - ..:/app
+
+    working_dir: /app
+
+    command:
+      >
+      bash -c "
+      cmake -S . -B build -G Ninja
+      -DENABLE_SANITIZERS=ON &&
+      cmake --build build &&
+      ctest --test-dir build --output-on-failure
+      "
+
+
+  guardian:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.runtime
+
+    privileged: true
+
+    network_mode: host
+
+    command:
+      - lo
+
+
+  redis:
+    image: redis:7-alpine
+
+    ports:
+      - "6379:6379"

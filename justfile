@@ -1,23 +1,83 @@
+####################################################
+# DEFAULT
+####################################################
+
 default:
     just test
+
+
+####################################################
+# CONFIGURATION
+####################################################
 
 configure:
     cmake -S . -B build -G Ninja
 
+
+configure-release:
+    cmake \
+        -S . \
+        -B build \
+        -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release
+
+
+configure-debug:
+    cmake \
+        -S . \
+        -B build \
+        -G Ninja \
+        -DCMAKE_BUILD_TYPE=Debug
+
+
+configure-sanitize:
+    cmake \
+        -S . \
+        -B build \
+        -G Ninja \
+        -DENABLE_SANITIZERS=ON
+
+
+configure-coverage:
+    cmake \
+        -S . \
+        -B build \
+        -G Ninja \
+        -DENABLE_COVERAGE=ON
+
+
+
+####################################################
+# BUILD
+####################################################
+
 build:
-    cmake --build build -j$(nproc)
+    cmake --build build
+
 
 clean:
     rm -rf build
+
 
 rebuild:
     just clean
     just configure
     just build
 
+
+
+####################################################
+# RUN
+####################################################
+
 run:
-    just build
-    ./build/network_guardian
+    ./build/network_guardian lo
+
+
+run-root:
+    sudo ./build/network_guardian lo
+
+
 
 ####################################################
 # TESTS
@@ -27,46 +87,135 @@ test:
     just build
     cd build && ctest --output-on-failure
 
+
+tests:
+    just test
+
+
 unit:
-    just build
-    ./build/unit_tests
+    ./build/all_tests
 
-integration:
-    just build
-    ./build/integration_tests
 
-integration-root:
-    just build
-    sudo ./build/integration_tests
+unit-root:
+    sudo ./build/all_tests
 
-e2e:
-    just build
-    sudo ./build/e2e_tests
 
-test-root:
-    just build
-    cd build && sudo ctest --output-on-failure
+
+####################################################
+# STATIC ANALYSIS
+####################################################
+
+warnings:
+    cmake \
+        -S . \
+        -B build \
+        -DENABLE_SANITIZERS=ON
+
+    cmake --build build
+
+
 
 ####################################################
 # COVERAGE
 ####################################################
 
 coverage:
-    rm -rf build
-    cmake -S . -B build -G Ninja -DENABLE_COVERAGE=ON
-    cmake --build build
-    ./build/unit_tests
+    just configure-coverage
+    just build
+    cd build && ctest --output-on-failure
 
-    cd build && \
-    lcov --capture --directory . --output-file coverage.info && \
-    genhtml coverage.info --output-directory coverage-html
+    gcovr \
+        -r . \
+        --html \
+        --html-details \
+        -o coverage.html
+
+
+
+####################################################
+# FORMAT
+####################################################
+
+format:
+    ./scripts/format.sh
+
+
+format-check:
+    clang-format \
+        --dry-run \
+        --Werror \
+        $(find src include tests -name '*.cpp' -o -name '*.hpp')
+
+
 
 ####################################################
 # DOCKER
 ####################################################
 
+docker-build:
+    docker compose \
+        -f docker/docker-compose.yml \
+        build
+
+
 docker-test:
-    docker compose run --rm tests
+    docker compose \
+        -f docker/docker-compose.yml \
+        run --rm build
+
 
 docker-run:
-    docker compose run --rm guardian
+    docker compose \
+        -f docker/docker-compose.yml \
+        run --rm guardian
+
+
+
+####################################################
+# SYSTEMD DEPLOY
+####################################################
+
+install:
+    sudo cmake --install build
+
+
+service-enable:
+    sudo systemctl daemon-reload
+    sudo systemctl enable network-guardian
+
+
+service-start:
+    sudo systemctl start network-guardian
+
+
+service-stop:
+    sudo systemctl stop network-guardian
+
+
+service-status:
+    sudo systemctl status network-guardian
+
+
+service-log:
+    sudo journalctl \
+        -u network-guardian \
+        -f
+
+
+
+####################################################
+# FULL PIPELINE
+####################################################
+
+ci:
+    just clean
+    just configure
+    just build
+    just test
+
+
+release-check:
+    just clean
+    just configure-release
+    just build
+    just test

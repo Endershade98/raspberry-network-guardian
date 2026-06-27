@@ -1,12 +1,14 @@
 // tests/integration/test_sniffer_loopback.cpp
 
-#include <gtest/gtest.h>
-#include "../../src/infrastructure/RawSocketSniffer.hpp"
-
 #include <thread>
 #include <chrono>
 #include <atomic>
 #include <cstdlib>
+
+#include <gtest/gtest.h>
+
+#include <network_guardian/infrastructure/RawSocketSniffer.hpp>
+
 
 TEST(RawSocketSnifferIntegrationTest, CaptureLoopbackTraffic)
 {

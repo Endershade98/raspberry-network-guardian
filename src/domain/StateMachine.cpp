@@ -1,6 +1,8 @@
 // src/domain/StateMachine.cpp
 
-#include "StateMachine.hpp"
+#include <network_guardian/domain/StateMachine.hpp>
+#include <network_guardian/domain/Packet.hpp>
+
 
 ConnectionState StateMachine::transition(
     ConnectionState current,

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+
 set -e
 
-cmake -S . -B build -G Ninja
-cmake --build build -j$(nproc)
+cmake --build build
+
 cd build
+
 ctest --output-on-failure
