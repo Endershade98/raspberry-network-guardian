@@ -2,11 +2,9 @@
 
 #include <gtest/gtest.h>
 
-
-#include "../../src/application/PacketParser.hpp"
-#include "../../src/application/PacketMapper.hpp"
-#include "../../src/application/ConnectionTracker.hpp"
-
+#include <network_guardian/application/PacketParser.hpp>
+#include <network_guardian/application/PacketMapper.hpp>
+#include <network_guardian/application/ConnectionTracker.hpp>
 
 
 TEST(Pipeline,

@@ -1,7 +1,9 @@
 // tests/integration/test_sniffer_start_stop.cpp
 
 #include <gtest/gtest.h>
-#include "../../src/infrastructure/RawSocketSniffer.hpp"
+
+#include <network_guardian/infrastructure/RawSocketSniffer.hpp>
+
 
 TEST(RawSocketSnifferIntegrationTest, StartAndStopRealSocket)
 {

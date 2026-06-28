@@ -77,3 +77,9 @@ compile_commands.json
 
 docs/raspberry-pi5-setup.md
 docs/roadmap.md
+
+build/
+compile_commands.json
+*.o
+*.log
+coverage/

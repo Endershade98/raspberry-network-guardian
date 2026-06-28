@@ -1,57 +1,72 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(raspberry_network_guardian LANGUAGES C CXX)
+project(
+    raspberry_network_guardian
+    VERSION 0.1.0
+    DESCRIPTION "Real-time network monitoring engine"
+    LANGUAGES CXX
+)
+
+############################################################
+# OPTIONS
+############################################################
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(ENABLE_TESTS "Build tests" ON)
-option(ENABLE_COVERAGE "Coverage" OFF)
+option(ENABLE_COVERAGE "Enable coverage" OFF)
+option(
+    ENABLE_SANITIZERS
+    "Enable address and undefined sanitizers"
+    OFF
+)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+############################################################
+# CCACHE
+############################################################
+
 find_program(CCACHE_PROGRAM ccache)
+
 if(CCACHE_PROGRAM)
-    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
 endif()
 
-add_compile_options(
-    -Wall
-    -Wextra
-    -Wpedantic
-)
+############################################################
+# CMAKE MODULES
+############################################################
 
-if(ENABLE_COVERAGE)
-    add_compile_options(--coverage -O0 -g)
-    add_link_options(--coverage)
-endif()
+include(cmake/CompilerWarnings.cmake)
+include(cmake/Sanitizers.cmake)
+include(cmake/Coverage.cmake)
+include(cmake/Dependencies.cmake)
 
-include(FetchContent)
+############################################################
+# THREADS
+############################################################
 
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-)
+find_package(Threads REQUIRED)
 
-FetchContent_MakeAvailable(googletest)
+############################################################
+# INCLUDE
+############################################################
 
-enable_testing()
+include_directories(include)
 
-include(GoogleTest)
-
-include_directories(src)
-
-#################################################
+############################################################
 # SOURCES
-#################################################
+############################################################
 
-set(APP_SOURCES
+set(CORE_SOURCES
+
     src/application/ConnectionTracker.cpp
-    src/application/PacketParser.cpp
     src/application/PacketMapper.cpp
+    src/application/PacketParser.cpp
 
     src/domain/StateMachine.cpp
 
@@ -59,92 +74,119 @@ set(APP_SOURCES
     src/infrastructure/RawSocketSniffer.cpp
     src/infrastructure/RedisClient.cpp
     src/infrastructure/SQLiteRepository.cpp
+
     src/interfaces/CLI.cpp
     src/interfaces/Logger.cpp
 )
 
-#################################################
-# MAIN
-#################################################
+############################################################
+# LIBRARY
+############################################################
+
+add_library(network_guardian_core STATIC
+    ${CORE_SOURCES}
+)
+
+target_enable_warnings(
+    network_guardian_core
+)
+
+
+if(ENABLE_SANITIZERS)
+
+    enable_sanitizers(
+        network_guardian_core
+    )
+
+endif()
+
+
+if(ENABLE_COVERAGE)
+
+    enable_coverage(
+        network_guardian_core
+    )
+
+endif()
+
+target_include_directories(network_guardian_core
+    PUBLIC include
+)
+
+target_link_libraries(network_guardian_core
+    PUBLIC Threads::Threads
+)
+
+############################################################
+# EXECUTABLE
+############################################################
 
 add_executable(network_guardian
-
-    ${APP_SOURCES}
     src/main.cpp
 )
 
-target_link_libraries(network_guardian pthread)
+enable_coverage(
+    network_guardian
+)
 
-#################################################
+target_enable_warnings(
+    network_guardian
+)
+
+target_link_libraries(network_guardian
+    PRIVATE network_guardian_core
+)
+
+############################################################
 # TESTS
-#################################################
+############################################################
 
 if(ENABLE_TESTS)
 
-#################################
-# UNIT
-#################################
 
-file(GLOB UNIT_TESTS
-    tests/unit/*.cpp
+add_project_dependencies()
+
+
+enable_testing()
+
+
+include(GoogleTest)
+
+
+file(GLOB_RECURSE TEST_SOURCES
+    tests/*.cpp
 )
 
-add_executable(unit_tests
 
-    ${APP_SOURCES}
-    ${UNIT_TESTS}
+add_executable(all_tests
+    ${TEST_SOURCES}
 )
 
-target_link_libraries(unit_tests
+enable_coverage(
+    all_tests
+)
 
+target_link_libraries(all_tests
+
+    PRIVATE
+
+    network_guardian_core
     GTest::gtest_main
-    pthread
+
 )
 
-gtest_discover_tests(unit_tests)
 
-#################################
-# INTEGRATION
-#################################
+gtest_discover_tests(all_tests)
 
-file(GLOB INTEGRATION_TESTS
-    tests/integration/*.cpp
-)
-
-add_executable(integration_tests
-
-    ${APP_SOURCES}
-    ${INTEGRATION_TESTS}
-)
-
-target_link_libraries(integration_tests
-
-    GTest::gtest_main
-    pthread
-)
-
-gtest_discover_tests(integration_tests)
-
-#################################
-# E2E
-#################################
-
-file(GLOB E2E_TESTS
-    tests/e2e/*.cpp
-)
-
-add_executable(e2e_tests
-
-    ${APP_SOURCES}
-    ${E2E_TESTS}
-)
-
-target_link_libraries(e2e_tests
-
-    GTest::gtest_main
-    pthread
-)
-
-gtest_discover_tests(e2e_tests)
 
 endif()
+
+install(
+    TARGETS network_guardian
+    RUNTIME DESTINATION bin
+)
+
+install(
+    DIRECTORY systemd/
+    DESTINATION lib/systemd/system
+)

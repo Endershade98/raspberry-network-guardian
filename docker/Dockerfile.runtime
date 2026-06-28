@@ -1,0 +1,13 @@
+FROM ubuntu:24.04
+
+
+COPY build/network_guardian /usr/local/bin/network_guardian
+
+
+RUN apt update && apt install -y \
+    libcap2 \
+    iproute2 \
+    && rm -rf /var/lib/apt/lists/*
+
+
+ENTRYPOINT ["/usr/local/bin/network_guardian"]

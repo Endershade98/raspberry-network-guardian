@@ -1,0 +1,14 @@
+build/
+.git/
+.github/
+
+*.o
+*.a
+*.so
+
+*.log
+
+.vscode/
+.idea/
+
+coverage/
