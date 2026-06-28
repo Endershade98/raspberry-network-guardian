@@ -1,40 +1,111 @@
+version: "3.9"
+
 services:
+
+  ####################################################
+  # BUILD
+  ####################################################
 
   build:
     build:
       context: ..
       dockerfile: docker/Dockerfile.dev
 
-    volumes:
-      - ..:/app
+    image: network-guardian-build
 
     working_dir: /app
 
-    command:
-      >
+    volumes:
+      - ..:/app
+      - build-cache:/app/build
+
+    command: >
       bash -c "
-      cmake -S . -B build -G Ninja
-      -DENABLE_SANITIZERS=ON &&
-      cmake --build build &&
-      ctest --test-dir build --output-on-failure
+      cmake -S . -B build -G Ninja &&
+      cmake --build build
       "
 
 
-  guardian:
+  ####################################################
+  # TESTS
+  ####################################################
+
+  tests:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.runtime
+      dockerfile: docker/Dockerfile.dev
+
+    image: network-guardian-build
 
     privileged: true
 
     network_mode: host
 
-    command:
-      - lo
+    working_dir: /app
 
+    volumes:
+      - ..:/app
+      - build-cache:/app/build
+
+    command: >
+      bash -c "
+      cmake -S . -B build -G Ninja &&
+      cmake --build build &&
+      cd build &&
+      ctest --output-on-failure
+      "
+
+
+  ####################################################
+  # APPLICATION RUNTIME
+  ####################################################
+
+  guardian:
+
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.runtime
+
+    image: network-guardian-runtime
+
+    privileged: true
+
+    network_mode: host
+
+    volumes:
+      - runtime-config:/etc/network-guardian
+
+    command:
+      [
+        "/usr/local/bin/network_guardian",
+        "lo"
+      ]
+
+
+  ####################################################
+  # REDIS BACKEND
+  ####################################################
 
   redis:
-    image: redis:7-alpine
+
+    image: redis:7
+
+    container_name: network-guardian-redis
+
+    restart: unless-stopped
 
     ports:
       - "6379:6379"
+
+
+####################################################
+# PERSISTENT DOCKER VOLUMES
+####################################################
+
+volumes:
+
+  # CMake/Ninja cache isolata dal filesystem host
+  build-cache:
+
+  # futura configurazione runtime
+  runtime-config:
