@@ -125,6 +125,10 @@ add_executable(network_guardian
     src/main.cpp
 )
 
+enable_coverage(
+    network_guardian
+)
+
 target_enable_warnings(
     network_guardian
 )
@@ -158,6 +162,9 @@ add_executable(all_tests
     ${TEST_SOURCES}
 )
 
+enable_coverage(
+    all_tests
+)
 
 target_link_libraries(all_tests
 

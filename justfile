@@ -122,15 +122,7 @@ warnings:
 coverage:
     just configure-coverage
     just build
-    cd build && ctest --output-on-failure
-
-    gcovr \
-        -r . \
-        --html \
-        --html-details \
-        -o coverage.html
-
-
+    ./scripts/coverage.sh
 
 ####################################################
 # FORMAT
